@@ -85,9 +85,9 @@ const Maze = () => {
       </div>
     );
   };
-  
+
   return (
-    <div className="maze" {...handlers}>
+    <div className="maze-container" {...handlers}>
       {renderMaze()}
     </div>
   );
