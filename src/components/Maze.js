@@ -14,12 +14,15 @@ const mazeData = [
 
 const Maze = () => {
   const [maze, setMaze] = useState(mazeData);
-  const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 0 });
+  const [playerPosition, setPlayerPosition] = useState({ x: 1, y: 1 });
+  const [isGameWon, setIsGameWon] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       event.preventDefault();
       const { key } = event;
+
+      if (isGameWon) return; // Stop movement if the game is won
 
       if (key === 'ArrowUp' && canMove(playerPosition.x, playerPosition.y - 1)) {
         movePlayer(playerPosition.x, playerPosition.y - 1);
@@ -36,7 +39,7 @@ const Maze = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [playerPosition]);
+  }, [playerPosition, isGameWon]);
 
   const movePlayer = (newX, newY) => {
     const newMaze = [...maze];
@@ -44,12 +47,16 @@ const Maze = () => {
     newMaze[newY][newX] = 'P';
     setPlayerPosition({ x: newX, y: newY });
     setMaze(newMaze);
+
+    if (newMaze[newY][newX] === 'E') {
+      setIsGameWon(true);
+    }
   };
 
   const canMove = (x, y) => {
     if (x >= 0 && x < maze[0].length && y >= 0 && y < maze.length) {
       const cell = maze[y][x];
-      return cell !== '#';
+      return cell !== '#' && cell !== 'P';
     }
     return false;
   };
@@ -62,6 +69,8 @@ const Maze = () => {
   });
 
   const handleSwipe = (event) => {
+    if (isGameWon) return; // Stop movement if the game is won
+
     const { dir } = event;
 
     if (dir === 'Up' && canMove(playerPosition.x, playerPosition.y - 1)) {
@@ -73,6 +82,12 @@ const Maze = () => {
     } else if (dir === 'Right' && canMove(playerPosition.x + 1, playerPosition.y)) {
       movePlayer(playerPosition.x + 1, playerPosition.y);
     }
+  };
+
+  const handleResetGame = () => {
+    setMaze(mazeData);
+    setPlayerPosition({ x: 1, y: 1 });
+    setIsGameWon(false);
   };
 
   const renderMaze = () => {
@@ -96,6 +111,14 @@ const Maze = () => {
     <div className="maze-container" {...handlers}>
       <h2>Maze Solver</h2>
       {renderMaze()}
+      {isGameWon ? (
+        <div className="win-message">
+          <p>Congratulations! You've won!</p>
+          <button onClick={handleResetGame}>Play Again</button>
+        </div>
+      ) : (
+        <p>Use arrow keys or swipe to navigate. Reach the exit (E) to win!</p>
+      )}
     </div>
   );
 };
