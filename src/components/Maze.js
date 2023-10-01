@@ -3,7 +3,13 @@ import { useSwipeable } from 'react-swipeable';
 import classNames from 'classnames';
 
 const mazeData = [
-  // maze data array...
+  ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#'],
+  ['#', 'S', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#'],
+  ['#', '#', '#', '#', ' ', '#', ' ', '#', ' ', '#'],
+  ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'],
+  ['#', ' ', '#', '#', '#', '#', '#', '#', ' ', '#'],
+  ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'],
+  ['#', '#', '#', '#', '#', '#', 'E', '#', '#', '#'],
 ];
 
 const Maze = () => {
@@ -88,6 +94,7 @@ const Maze = () => {
 
   return (
     <div className="maze-container" {...handlers}>
+      <h2>Maze Solver</h2>
       {renderMaze()}
     </div>
   );
